@@ -3,7 +3,7 @@ import { EnumEspecie } from '../enum/especies';
 
 @Entity()
 export default class PetEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
   @Column()
   nome: string;
