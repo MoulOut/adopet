@@ -1,5 +1,11 @@
-// AdotanteEntity.ts
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import EnderecoEntity from './enderecoEntity.entity';
 
 @Entity()
 export default class AdotanteEntity {
@@ -13,15 +19,20 @@ export default class AdotanteEntity {
   celular: string;
   @Column({ nullable: true })
   foto?: string;
-  @Column({ nullable: true })
-  endereco?: string;
+  @OneToOne(() => EnderecoEntity, {
+    cascade: true,
+    nullable: true,
+    eager: true,
+  })
+  @JoinColumn()
+  endereco?: EnderecoEntity;
 
   constructor(
     nome: string,
     senha: string,
     celular: string,
     foto?: string,
-    endereco?: string
+    endereco?: EnderecoEntity
   ) {
     this.nome = nome;
     this.senha = senha;
