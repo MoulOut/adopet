@@ -1,27 +1,33 @@
 import { Repository } from 'typeorm';
 import PetEntity from '../entities/petEntity.entity';
 import InterfacePetRepository from './interfaces/interfacePetRepository';
+import AdotanteEntity from '../entities/adotanteEntity.entity';
 
 export default class PetRepository implements InterfacePetRepository {
-  private repository: Repository<PetEntity>;
+  private petRepository: Repository<PetEntity>;
+  private adotanteRepository: Repository<AdotanteEntity>;
 
-  constructor(repository: Repository<PetEntity>) {
-    this.repository = repository;
+  constructor(
+    petRepository: Repository<PetEntity>,
+    adotanteRepository: Repository<AdotanteEntity>
+  ) {
+    this.petRepository = petRepository;
+    this.adotanteRepository = adotanteRepository;
   }
 
   criaPet(pet: PetEntity): void {
-    this.repository.save(pet);
+    this.petRepository.save(pet);
   }
 
   async listaPet(): Promise<PetEntity[]> {
-    return await this.repository.find();
+    return await this.petRepository.find();
   }
 
   async atualizaPet(
     newData: PetEntity,
     id: number
   ): Promise<{ sucess: boolean; message?: string }> {
-    const atualizaPet = await this.repository.findOneBy({ id });
+    const atualizaPet = await this.petRepository.findOneBy({ id });
 
     if (atualizaPet === null) {
       return { sucess: false, message: 'Pet não encontrado.' };
@@ -29,17 +35,44 @@ export default class PetRepository implements InterfacePetRepository {
 
     Object.assign(atualizaPet, newData);
 
-    await this.repository.save(atualizaPet);
+    await this.petRepository.save(atualizaPet);
     return { sucess: true, message: 'Pet atualizado com sucesso' };
   }
 
   async deletaPet(id: number): Promise<{ sucess: boolean; message?: string }> {
-    const deletaPet = await this.repository.delete({ id });
+    const deletaPet = await this.petRepository.delete({ id });
 
     if (deletaPet.affected === 0) {
       return { sucess: false, message: 'Pet não encontrado.' };
     }
 
     return { sucess: true, message: 'Pet deletado com sucesso.' };
+  }
+
+  async adotaPet(
+    petId: number,
+    adotanteId: number
+  ): Promise<{ success: boolean; message?: string }> {
+    const pet = await this.petRepository.findOneBy({ id: petId });
+    const adotante = await this.adotanteRepository.findOneBy({
+      id: adotanteId,
+    });
+
+    if (pet === null) {
+      return { success: false, message: 'Pet não encontrado' };
+    }
+
+    if (adotante === null) {
+      return { success: false, message: 'Adotante não encontrado' };
+    }
+
+    pet.adotante = adotante;
+    pet.adotado = true;
+    adotante.pets.push(pet);
+
+    await this.adotanteRepository.save(adotante);
+    await this.petRepository.save(pet);
+
+    return { success: true, message: 'Pet adotado com sucesso.' };
   }
 }
