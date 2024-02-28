@@ -4,14 +4,6 @@ import { EnumEspecie } from '../enum/especies';
 import PetRepository from '../repositories/petRepository';
 import PetEntity from '../entities/petEntity.entity';
 
-let listaDePets: PetType[] = [];
-let id = 0;
-
-function geraId() {
-  id = id + 1;
-  return id;
-}
-
 export default class PetController {
   constructor(private repository: PetRepository) {}
   async listaPets(req: Request, res: Response) {
@@ -19,16 +11,15 @@ export default class PetController {
     return res.status(200).json(petsList);
   }
 
-  criaPet(req: Request, res: Response) {
+  async criaPet(req: Request, res: Response) {
     const { dataDeNascimento, nome, adotado, especie } = req.body as PetEntity;
 
     if (!Object.values(EnumEspecie).includes(especie)) {
       return res.status(400).json({ Error: 'Especie invalida.' });
     }
 
-    const newPet = new PetEntity();
-    Object.assign(newPet, { dataDeNascimento, nome, adotado, especie });
-    this.repository.criaPet(newPet);
+    const newPet = new PetEntity(nome, especie, dataDeNascimento, adotado);
+    await this.repository.criaPet(newPet);
 
     return res.status(201).json(newPet);
   }
