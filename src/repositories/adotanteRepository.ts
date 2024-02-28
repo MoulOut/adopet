@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import AdotanteEntity from '../entities/adotanteEntity.entity';
 import InterfaceAdotanteRepository from './interfaces/interfaceAdotanteRepository';
+import EnderecoEntity from '../entities/enderecoEntity.entity';
 
 export default class AdotanteRepository implements InterfaceAdotanteRepository {
   private repository: Repository<AdotanteEntity>;
@@ -60,5 +61,25 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
         message: 'Ocorreu um erro ao tentar excluir o adotante.',
       };
     }
+  }
+
+  async atualizaEndereçoAdotante(
+    adotanteId: number,
+    endereco: EnderecoEntity
+  ): Promise<{
+    success: boolean;
+    message?: string;
+  }> {
+    const adotante = await this.repository.findOneBy({ id: adotanteId });
+
+    if (!adotante) {
+      return { success: false, message: 'Adotante não encontrado' };
+    }
+
+    const novoEndereco = new EnderecoEntity(endereco.cidade, endereco.estado);
+    adotante.endereco = novoEndereco;
+    await this.repository.save(adotante);
+
+    return { success: true, message: 'Endereço cadastrado com sucesso.' };
   }
 }

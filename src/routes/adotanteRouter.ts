@@ -13,6 +13,7 @@ router
   .post('/', (req, res) => adotanteController.criaAdotante(req, res))
   .get('/', (req, res) => adotanteController.listaAdotantes(req, res))
   .put('/:id', (req, res) => adotanteController.atualizaAdotante(req, res))
-  .delete('/:id', (req, res) => adotanteController.deletaAdotante(req, res));
+  .delete('/:id', (req, res) => adotanteController.deletaAdotante(req, res))
+  .patch('/:id', (req, res) => adotanteController.atualizaEndereco(req, res));
 
 export default router;
