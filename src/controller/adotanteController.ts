@@ -6,7 +6,8 @@ import {
   TipoRequestBodyAdotante,
   TipoRequestParamsAdotante,
   TipoResponseBodyAdotante,
-} from '../types/adotanteType';
+} from '../types/adotanteTypes';
+import PetRepository from '../repositories/petRepository';
 
 export default class AdotanteController {
   constructor(private repository: AdotanteRepository) {}
@@ -27,9 +28,9 @@ export default class AdotanteController {
       );
 
       await this.repository.criaAdotante(novoAdotante);
-      return res
-        .status(201)
-        .json({ data: { id: novoAdotante.id, nome, celular } });
+      return res.status(201).json({
+        data: { id: novoAdotante.id, nome, celular, pets: [] },
+      });
     } catch (error) {
       return res.status(500).json({ error: 'Erro ao criar o adotante' });
     }
@@ -62,6 +63,7 @@ export default class AdotanteController {
         id: adotante.id,
         nome: adotante.nome,
         celular: adotante.celular,
+        pets: adotante.pets,
       };
     });
     return res.status(200).json({ data });
