@@ -2,6 +2,7 @@ import { Repository } from 'typeorm';
 import PetEntity from '../entities/petEntity.entity';
 import InterfacePetRepository from './interfaces/interfacePetRepository';
 import AdotanteEntity from '../entities/adotanteEntity.entity';
+import { EnumPorte } from '../enum/porte';
 
 export default class PetRepository implements InterfacePetRepository {
   private petRepository: Repository<PetEntity>;
@@ -74,5 +75,11 @@ export default class PetRepository implements InterfacePetRepository {
     await this.petRepository.save(pet);
 
     return { success: true, message: 'Pet adotado com sucesso.' };
+  }
+
+  async buscaPetPeloPorte(porte: EnumPorte): Promise<PetEntity[]> {
+    const petsList = await this.petRepository.findBy({ porte });
+
+    return petsList;
   }
 }
