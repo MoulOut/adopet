@@ -1,7 +1,8 @@
-import express from 'express';
+import express, { RequestHandler } from 'express';
 import PetController from '../controller/petController';
 import PetRepository from '../repositories/petRepository';
 import { appDataSource } from '../config/dataSource';
+import { middlewareValidaBodyPet } from '../middlewares/validators/petRequestBody';
 
 const router = express.Router();
 const petRepository = new PetRepository(
@@ -10,8 +11,11 @@ const petRepository = new PetRepository(
 );
 const petController = new PetController(petRepository);
 
+const validateBodyPet: RequestHandler = (req, res, next) =>
+  middlewareValidaBodyPet(req, res, next);
+
 router
-  .post('/', (req, res) => petController.criaPet(req, res))
+  .post('/', validateBodyPet, (req, res) => petController.criaPet(req, res))
   .get('/', (req, res) => petController.listaPets(req, res))
   .get('/filtro', (req, res) =>
     petController.buscaPetPorCampoGenerico(req, res)

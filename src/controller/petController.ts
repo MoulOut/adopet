@@ -21,7 +21,7 @@ export default class PetController {
         id: pet.id,
         nome: pet.nome,
         especie: pet.especie,
-        porte: pet.porte,
+        porte: pet.porte === null ? undefined : pet.porte,
       };
     });
     return res.status(200).json({ data });
@@ -33,14 +33,6 @@ export default class PetController {
   ) {
     const { dataDeNascimento, nome, adotado, especie, porte } =
       req.body as PetEntity;
-
-    if (!Object.values(EnumEspecie).includes(especie)) {
-      return res.status(400).json({ error: 'Especie invalida.' });
-    }
-
-    if (porte && !Object.values(EnumPorte).includes(porte)) {
-      return res.status(400).json({ error: 'Porte invalido.' });
-    }
 
     const newPet = new PetEntity(
       nome,
