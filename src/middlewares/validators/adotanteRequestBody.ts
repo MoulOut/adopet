@@ -1,4 +1,4 @@
-import { Request, RequestHandler, Response } from 'express';
+import { RequestHandler } from 'express';
 import * as yup from 'yup';
 import { TipoRequestBodyAdotante } from '../../types/adotanteTypes';
 
@@ -17,7 +17,7 @@ const middlewareValidaBodyAdotante: RequestHandler = async (req, res, next) => {
       abortEarly: false,
     });
 
-    return next;
+    return next();
   } catch (error) {
     const yupErrors = error as yup.ValidationError;
 

@@ -28,7 +28,7 @@ export default class AdotanteController {
 
       await this.repository.criaAdotante(novoAdotante);
       return res.status(201).json({
-        data: { id: novoAdotante.id, nome, celular, pets: [] },
+        data: { id: novoAdotante.id, nome, celular, pets: [], endereco },
       });
     } catch (error) {
       return res.status(500).json({ error: 'Erro ao criar o adotante' });
@@ -62,6 +62,7 @@ export default class AdotanteController {
         id: adotante.id,
         nome: adotante.nome,
         celular: adotante.celular,
+        endereco: adotante.endereco === null ? undefined : adotante.endereco,
         pets: adotante.pets,
       };
     });
@@ -81,23 +82,24 @@ export default class AdotanteController {
     if (!success) {
       return res.status(404).json({ error: message });
     }
-    return res.sendStatus(204);
+    return res.status(204);
   }
 
   async atualizaEndereco(
-    req: Request<TipoRequestParamsAdotante, {}, TipoRequestBodyAdotante>,
+    req: Request<TipoRequestParamsAdotante, {}, EnderecoEntity>,
     res: Response<TipoResponseBodyAdotante>
   ) {
     const { id } = req.params;
 
     const { success, message } = await this.repository.atualizaEndereçoAdotante(
       Number(id),
-      req.body.endereco as EnderecoEntity
+      req.body
     );
 
     if (!success) {
       return res.status(404).json({ error: message });
     }
-    return res.sendStatus(204);
+
+    return res.status(200).json({ message });
   }
 }
