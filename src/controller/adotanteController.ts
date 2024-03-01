@@ -82,7 +82,7 @@ export default class AdotanteController {
     if (!success) {
       return res.status(404).json({ error: message });
     }
-    return res.status(204);
+    return res.status(200).json({message});
   }
 
   async atualizaEndereco(

@@ -1,6 +1,9 @@
 import { RequestHandler } from 'express';
 import * as yup from 'yup';
 import EnderecoEntity from '../../entities/enderecoEntity.entity';
+import { pt } from 'yup-locale-pt';
+
+yup.setLocale(pt);
 
 const enderecoBodySchema: yup.ObjectSchema<Omit<EnderecoEntity, 'id'>> =
   yup.object({

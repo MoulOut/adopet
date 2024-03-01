@@ -53,7 +53,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
 
       await this.repository.remove(adotanteToRemove);
 
-      return { success: true };
+      return { success: true, message: 'Adotante removido com sucesso.' };
     } catch (error) {
       // Se ocorrer um erro inesperado, você pode retornar uma mensagem genérica ou personalizada.
       return {
