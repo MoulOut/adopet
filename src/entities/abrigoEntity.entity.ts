@@ -1,4 +1,6 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -8,6 +10,7 @@ import {
 } from 'typeorm';
 import PetEntity from './petEntity.entity';
 import EnderecoEntity from './enderecoEntity.entity';
+import { geraSenhaCriptografada } from '../utils/geraSenhaCriptografada';
 
 @Entity()
 export default class AbrigoEntity {
@@ -23,9 +26,9 @@ export default class AbrigoEntity {
     eager: true,
   })
   @JoinColumn()
-  endereco: EnderecoEntity;
+  endereco?: EnderecoEntity;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, unique: true })
   email: string;
 
   @Column()
@@ -41,15 +44,23 @@ export default class AbrigoEntity {
 
   constructor(
     nome: string,
-    endereco: EnderecoEntity,
     email: string,
     senha: string,
-    celular: string
+    celular: string,
+    endereco?: EnderecoEntity
   ) {
     this.nome = nome;
-    this.endereco = endereco;
     this.email = email;
     this.senha = senha;
     this.celular = celular;
+    this.endereco = endereco;
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  private async criptografarSenha() {
+    if (this.senha) {
+      this.senha = geraSenhaCriptografada(this.senha);
+    }
   }
 }
