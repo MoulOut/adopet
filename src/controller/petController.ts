@@ -11,6 +11,7 @@ import {
 
 export default class PetController {
   constructor(private repository: PetRepository) {}
+  
   async listaPets(
     req: Request<TipoRequestParamsPet, {}, TipoRequestBodyPet>,
     res: Response<TipoResponseBodyPet>
@@ -53,16 +54,9 @@ export default class PetController {
     res: Response<TipoResponseBodyPet>
   ) {
     const { id } = req.params;
-    const { sucess, message } = await this.repository.atualizaPet(
-      req.body as PetEntity,
-      Number(id)
-    );
+    await this.repository.atualizaPet(req.body as PetEntity, Number(id));
 
-    if (sucess) {
-      return res.status(200).json({ message });
-    }
-
-    return res.status(404).json({ error: message });
+    return res.sendStatus(204);
   }
 
   async deletaPet(
@@ -70,13 +64,9 @@ export default class PetController {
     res: Response<TipoResponseBodyPet>
   ) {
     const { id } = req.params;
-    const { sucess, message } = await this.repository.deletaPet(Number(id));
+    await this.repository.deletaPet(Number(id));
 
-    if (sucess) {
-      return res.status(200).json({ message });
-    }
-
-    return res.status(404).json({ error: message });
+    return res.status(204);
   }
 
   async adotaPet(
@@ -84,13 +74,8 @@ export default class PetController {
     res: Response<TipoResponseBodyPet>
   ) {
     const { pet_id, id_adotante } = req.params;
-    const { success, message } = await this.repository.adotaPet(
-      Number(pet_id),
-      Number(id_adotante)
-    );
-    if (!success) {
-      return res.status(404).json({ error: message });
-    }
+    await this.repository.adotaPet(Number(pet_id), Number(id_adotante));
+
     return res.sendStatus(204);
   }
 

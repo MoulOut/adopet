@@ -3,7 +3,7 @@ import AbrigoRepository from '../repositories/abrigoRepository';
 import { Request, Response } from 'express';
 
 export default class AbrigoController {
-  private abrigoRepository = Repository<AbrigoRepository>;
+  constructor(repository: AbrigoRepository) {}
 
   async criaAbrigo(req: Request, res: Response) {}
 

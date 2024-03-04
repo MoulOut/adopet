@@ -13,7 +13,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
   private async verificaCelular(celular: string) {
     return await this.repository.findOneBy({ celular });
   }
-  
+
   async criaAdotante(adotante: AdotanteEntity): Promise<void> {
     if (await this.verificaCelular(adotante.celular)) {
       throw new BadRequest('Celular já cadastrado');
@@ -25,10 +25,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
     return await this.repository.find();
   }
 
-  async atualizaAdotante(
-    id: number,
-    newData: AdotanteEntity
-  ): Promise<{ success: boolean; message?: string }> {
+  async atualizaAdotante(id: number, newData: AdotanteEntity) {
     const adotanteToUpdate = await this.repository.findOne({ where: { id } });
 
     if (!adotanteToUpdate) {
@@ -42,9 +39,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
     return { success: true };
   }
 
-  async deletaAdotante(
-    id: number
-  ): Promise<{ success: boolean; message?: string }> {
+  async deletaAdotante(id: number) {
     const adotanteToRemove = await this.repository.findOne({ where: { id } });
 
     if (!adotanteToRemove) {
@@ -56,13 +51,7 @@ export default class AdotanteRepository implements InterfaceAdotanteRepository {
     return { success: true, message: 'Adotante removido com sucesso.' };
   }
 
-  async atualizaEndereçoAdotante(
-    adotanteId: number,
-    endereco: EnderecoEntity
-  ): Promise<{
-    success: boolean;
-    message?: string;
-  }> {
+  async atualizaEndereçoAdotante(adotanteId: number, endereco: EnderecoEntity) {
     const adotante = await this.repository.findOneBy({ id: adotanteId });
 
     if (!adotante) {
