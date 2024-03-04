@@ -3,6 +3,7 @@ import PetController from '../controller/petController';
 import PetRepository from '../repositories/petRepository';
 import { appDataSource } from '../config/dataSource';
 import { middlewareValidaBodyPet } from '../middlewares/validators/petRequestBody';
+import { MiddlewareVerifyId } from '../middlewares/verificaId';
 
 const router = express.Router();
 const petRepository = new PetRepository(
@@ -20,8 +21,14 @@ router
   .get('/filtro', (req, res) =>
     petController.buscaPetPorCampoGenerico(req, res)
   )
-  .put('/:id', (req, res) => petController.atualizaPet(req, res))
-  .put('/:pet_id/:id_adotante', (req, res) => petController.adotaPet(req, res))
-  .delete('/:id', (req, res) => petController.deletaPet(req, res));
+  .put('/:id', MiddlewareVerifyId, (req, res) =>
+    petController.atualizaPet(req, res)
+  )
+  .put('/:pet_id/:id_adotante', MiddlewareVerifyId, (req, res) =>
+    petController.adotaPet(req, res)
+  )
+  .delete('/:id', MiddlewareVerifyId, (req, res) =>
+    petController.deletaPet(req, res)
+  );
 
 export default router;
