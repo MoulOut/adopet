@@ -8,7 +8,7 @@ export const MiddlewareVerifyId: RequestHandler = (req, res, next) => {
     if (!Number.isInteger(Number(params[param]))) {
       throw new BadRequest(`O paramatro ${param} deve ser um numero inteiro.`);
     }
-
-    return next();
   }
+
+  return next()
 };

@@ -7,9 +7,9 @@ import { MiddlewareErro } from './middlewares/erro';
 const app = express();
 app.use(express.json());
 
-app.use(MiddlewareErro);
-
 router(app);
+
+app.use(MiddlewareErro);
 appDataSource
   .initialize()
   .then(() => console.log('Connected to DB'))
