@@ -6,12 +6,9 @@ export default interface InterfacePetRepository {
 
   listaPet(): PetEntity[] | Promise<PetEntity[]>;
 
-  atualizaPet(
-    pet: PetEntity,
-    id: number
-  ): void | Promise<{ sucess: boolean; message?: string }>;
+  atualizaPet(pet: PetEntity, id: number): void;
 
-  deletaPet(id: number): void | Promise<{ sucess: boolean; message?: string }>;
+  deletaPet(id: number): void;
 
   buscaPetPeloPorte(porte: EnumPorte): Promise<PetEntity[]> | PetEntity[];
 
