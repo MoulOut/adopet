@@ -7,7 +7,7 @@ import { EnumPorte } from '../../enum/porte';
 
 yup.setLocale(pt);
 
-const petBodySchema: yup.ObjectSchema<Omit<TipoRequestBodyPet, 'adotante'>> =
+const petBodySchema: yup.ObjectSchema<Omit<TipoRequestBodyPet, 'adotante' |'abrigo'>> =
   yup.object({
     nome: yup.string().defined().required(),
     especie: yup
