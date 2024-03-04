@@ -3,6 +3,7 @@ import PetEntity from '../entities/petEntity.entity';
 import InterfacePetRepository from './interfaces/interfacePetRepository';
 import AdotanteEntity from '../entities/adotanteEntity.entity';
 import { EnumPorte } from '../enum/porte';
+import { NotFound } from '../utils/manipulaErros';
 
 export default class PetRepository implements InterfacePetRepository {
   private petRepository: Repository<PetEntity>;
@@ -31,7 +32,7 @@ export default class PetRepository implements InterfacePetRepository {
     const atualizaPet = await this.petRepository.findOneBy({ id });
 
     if (atualizaPet === null) {
-      return { sucess: false, message: 'Pet não encontrado.' };
+      throw new NotFound('Pet não encontrado.');
     }
 
     Object.assign(atualizaPet, newData);
@@ -44,7 +45,7 @@ export default class PetRepository implements InterfacePetRepository {
     const deletaPet = await this.petRepository.delete({ id });
 
     if (deletaPet.affected === 0) {
-      return { sucess: false, message: 'Pet não encontrado.' };
+      throw new NotFound('Pet não encontrado.');
     }
 
     return { sucess: true, message: 'Pet deletado com sucesso.' };
@@ -60,11 +61,11 @@ export default class PetRepository implements InterfacePetRepository {
     });
 
     if (pet === null) {
-      return { success: false, message: 'Pet não encontrado' };
+      throw new NotFound('Pet não encontrado.');
     }
 
     if (adotante === null) {
-      return { success: false, message: 'Adotante não encontrado' };
+      throw new NotFound('Adotante não encontrado.');
     }
 
     pet.adotante = adotante;
