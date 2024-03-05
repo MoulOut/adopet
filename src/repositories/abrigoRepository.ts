@@ -15,7 +15,7 @@ export default class AbrigoRepository implements InterfaceAbrigoRepository {
   }
 
   async criaAbrigo(abrigo: AbrigoEntity): Promise<void> {
-    if (await this.abrigoComEmail(abrigo.celular)) {
+    if (await this.abrigoComEmail(abrigo.email)) {
       throw new BadRequest('Já existe um abrigo com este email.');
     }
     await this.repository.save(abrigo);
