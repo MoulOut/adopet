@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import AbrigoEntity from '../entities/abrigoEntity.entity';
 import InterfaceAbrigoRepository from './interfaces/interfaceAbrigoRepository';
 import EnderecoEntity from '../entities/enderecoEntity.entity';
-import { NotFound } from '../utils/manipulaErros';
+import { BadRequest, NotFound } from '../utils/manipulaErros';
 
 export default class AbrigoRepository implements InterfaceAbrigoRepository {
   private repository: Repository<AbrigoEntity>;
@@ -10,7 +10,14 @@ export default class AbrigoRepository implements InterfaceAbrigoRepository {
     this.repository = repository;
   }
 
+  private async abrigoComEmail(email: string) {
+    return !!(await this.repository.findOneBy({ email }));
+  }
+
   async criaAbrigo(abrigo: AbrigoEntity): Promise<void> {
+    if (await this.abrigoComEmail(abrigo.celular)) {
+      throw new BadRequest('Já existe um abrigo com este email.');
+    }
     await this.repository.save(abrigo);
   }
 
@@ -18,10 +25,7 @@ export default class AbrigoRepository implements InterfaceAbrigoRepository {
     return await this.repository.find();
   }
 
-  async atualizaAbrigo(
-    id: number,
-    newData: AbrigoEntity
-  ): Promise<{ success: boolean; message?: string }> {
+  async atualizaAbrigo(id: number, newData: AbrigoEntity) {
     const abrigoToUpdate = await this.repository.findOne({ where: { id } });
 
     if (!abrigoToUpdate) {
@@ -35,9 +39,7 @@ export default class AbrigoRepository implements InterfaceAbrigoRepository {
     return { success: true };
   }
 
-  async deletaAbrigo(
-    id: number
-  ): Promise<{ success: boolean; message?: string }> {
+  async deletaAbrigo(id: number) {
     const abrigoToRemove = await this.repository.findOne({ where: { id } });
 
     if (!abrigoToRemove) {

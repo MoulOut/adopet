@@ -28,7 +28,7 @@ export default class AbrigoEntity {
   @JoinColumn()
   endereco?: EnderecoEntity;
 
-  @Column({ nullable: true, unique: true })
+  @Column({ unique: true })
   email: string;
 
   @Column()
